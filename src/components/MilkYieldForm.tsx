@@ -5,9 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Calendar, Droplets, AlertTriangle, Award } from "lucide-react";
-import AnimatedCounter from "./AnimatedCounter";
-import DragDropZone from "./DragDropZone";
+import { TrendingUp, Calendar, Droplets } from "lucide-react";
 
 interface CowData {
   breed: string;
@@ -37,7 +35,6 @@ const MilkYieldForm = () => {
   
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showCounter, setShowCounter] = useState(false);
 
   const handleInputChange = (field: keyof CowData, value: string) => {
     setCowData(prev => ({ ...prev, [field]: value }));
@@ -62,7 +59,6 @@ const MilkYieldForm = () => {
       
       setPrediction(mockPrediction);
       setIsLoading(false);
-      setShowCounter(true);
     }, 2000);
   };
 
@@ -193,10 +189,9 @@ const MilkYieldForm = () => {
           </Card>
 
           {prediction && (
-            <Card className="glass-enhanced shadow-depth bg-gradient-card hover:shadow-glow transition-all duration-500 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-primary opacity-5"></div>
-              <CardHeader className="relative z-10">
-                <CardTitle className="flex items-center gap-2 gradient-text">
+            <Card className="shadow-card bg-gradient-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-success">
                   <TrendingUp className="w-5 h-5" />
                   Prediction Results
                 </CardTitle>
@@ -205,61 +200,34 @@ const MilkYieldForm = () => {
                 </CardDescription>
               </CardHeader>
               
-              <CardContent className="space-y-6 relative z-10">
+              <CardContent className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-6 glass-enhanced rounded-xl hover-scale shadow-soft">
+                  <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                     <Calendar className="w-8 h-8 text-primary mx-auto mb-2" />
-                    <div className="text-3xl font-bold text-foreground mb-2">
-                      {showCounter ? (
-                        <AnimatedCounter end={prediction.dailyYield} suffix="L" />
-                      ) : (
-                        `${prediction.dailyYield}L`
-                      )}
-                    </div>
+                    <div className="text-2xl font-bold text-foreground">{prediction.dailyYield}L</div>
                     <div className="text-sm text-muted-foreground">Daily Yield</div>
-                    <div className="text-2xl mt-2">🥛</div>
                   </div>
                   
-                  <div className="text-center p-6 glass-enhanced rounded-xl hover-scale shadow-soft">
+                  <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                     <TrendingUp className="w-8 h-8 text-success mx-auto mb-2" />
-                    <div className="text-3xl font-bold text-foreground mb-2">
-                      {showCounter ? (
-                        <AnimatedCounter end={prediction.weeklyYield} suffix="L" duration={2500} />
-                      ) : (
-                        `${prediction.weeklyYield}L`
-                      )}
-                    </div>
+                    <div className="text-2xl font-bold text-foreground">{prediction.weeklyYield}L</div>
                     <div className="text-sm text-muted-foreground">Weekly Yield</div>
-                    <div className="text-2xl mt-2">📊</div>
                   </div>
                 </div>
                 
                 <div className="text-center">
-                  <Badge 
-                    className={`text-lg px-6 py-3 glass-enhanced ${
-                      prediction.confidence >= 90 ? 'risk-high bg-success text-success-foreground' : 
-                      prediction.confidence >= 75 ? 'risk-medium bg-warning text-warning-foreground' : 'bg-secondary text-secondary-foreground'
-                    }`}
-                  >
-                    <Award className="w-4 h-4 mr-2" />
-                    {showCounter ? (
-                      <AnimatedCounter end={prediction.confidence} suffix="% Confidence" duration={1500} />
-                    ) : (
-                      `${prediction.confidence}% Confidence`
-                    )}
+                  <Badge className="bg-success text-success-foreground text-lg px-4 py-2">
+                    {prediction.confidence}% Confidence
                   </Badge>
                 </div>
                 
-                <div className="glass-enhanced rounded-xl p-6">
-                  <h4 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-primary" />
-                    Recommendations
-                  </h4>
-                  <ul className="space-y-3">
+                <div>
+                  <h4 className="font-semibold text-foreground mb-3">Recommendations</h4>
+                  <ul className="space-y-2">
                     {prediction.recommendations.map((rec, index) => (
-                      <li key={index} className="flex items-start gap-3 text-sm text-muted-foreground animate-slide-in-left" style={{animationDelay: `${index * 0.1}s`}}>
-                        <div className="w-3 h-3 bg-gradient-primary rounded-full mt-2 pulse-glow"></div>
-                        <span className="leading-relaxed">{rec}</span>
+                      <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                        {rec}
                       </li>
                     ))}
                   </ul>
@@ -267,24 +235,6 @@ const MilkYieldForm = () => {
               </CardContent>
             </Card>
           )}
-          
-          {/* CSV Upload Section */}
-          <Card className="glass-enhanced shadow-card hover:shadow-glow transition-all duration-500">
-            <CardHeader>
-              <CardTitle className="gradient-text">Bulk Analysis</CardTitle>
-              <CardDescription>Upload a CSV file for multiple cow analysis</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <DragDropZone 
-                onFileUpload={(file) => {
-                  // Handle CSV file upload
-                  console.log("Uploaded file:", file.name);
-                }}
-                accept=".csv,.xlsx"
-                maxSize={10}
-              />
-            </CardContent>
-          </Card>
         </div>
       </div>
     </section>

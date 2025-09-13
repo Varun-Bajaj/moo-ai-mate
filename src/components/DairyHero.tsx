@@ -1,88 +1,56 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import heroImage from "@/assets/hero-dairy-farm.jpg";
-import AnimatedCounter from "./AnimatedCounter";
 
 const DairyHero = () => {
   return (
-    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden floating-orbs milk-drops">
-      {/* Animated background */}
+    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat parallax-slow"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
-        <div className="absolute inset-0 bg-gradient-hero opacity-90"></div>
-        <div className="absolute inset-0 bg-gradient-mesh opacity-20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/60"></div>
       </div>
       
-      {/* Enhanced floating elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-glow rounded-full opacity-60 animate-float"></div>
-      <div className="absolute bottom-32 right-16 w-32 h-32 bg-gradient-floating rounded-lg rotate-45 opacity-40 animate-pulse-glow"></div>
-      <div className="absolute top-1/2 left-1/4 w-16 h-16 border-2 border-white/30 rounded-full animate-ping"></div>
-      
-      {/* Animated cow emoji */}
-      <div className="absolute top-1/3 right-1/3 text-4xl animate-bounce opacity-70">🐄</div>
-      <div className="absolute bottom-1/4 left-1/3 text-3xl animate-float opacity-60">🌾</div>
-      
-      {/* Light particles */}
-      <div className="absolute top-16 right-20 w-2 h-2 bg-white rounded-full animate-ping opacity-80"></div>
-      <div className="absolute bottom-20 left-16 w-3 h-3 bg-white rounded-full animate-pulse opacity-60"></div>
-      
-      <div className="relative z-10 container mx-auto px-4 text-center slide-up">
-        <Badge className="mb-6 bg-white/20 text-white border border-white/30 text-sm font-medium glass hover-scale glow-on-hover">
+      <div className="relative z-10 container mx-auto px-4 text-center">
+        <Badge className="mb-6 bg-success text-success-foreground text-sm font-medium">
           🐄 AI-Powered Dairy Management
         </Badge>
         
-        <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight gradient-text animate-fade-in-up">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
           Dairy AI Assistant
         </h1>
         
-        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
           Predict milk yield, detect diseases early, and get expert advice in Hindi or English. 
-          Empower your dairy farming with cutting-edge AI technology.
+          Empower your dairy farming with AI technology.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold hover-scale glow-on-hover shadow-neon neon-border">
-            Start Predicting ✨
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Button size="lg" className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold">
+            Start Predicting
           </Button>
           <Button 
             variant="outline" 
             size="lg" 
-            className="border-white/50 text-white hover:bg-white/20 px-8 py-4 text-lg font-semibold glass hover-scale backdrop-blur-sm"
+            className="border-white text-white hover:bg-white hover:text-primary px-8 py-4 text-lg font-semibold"
           >
-            Chat with AI Assistant 🤖
+            Chat with AI Assistant
           </Button>
         </div>
         
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center stagger-children">
-          <div className="glass-enhanced rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-            <div className="relative z-10">
-              <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">
-                <AnimatedCounter end={500} suffix="+" duration={2000} />
-              </div>
-              <div className="text-white/80 text-lg">Farmers Helped</div>
-              <div className="mt-2 text-2xl animate-pulse">🚜</div>
-            </div>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+            <div className="text-3xl font-bold text-white">500+</div>
+            <div className="text-white/80">Farmers Helped</div>
           </div>
-          <div className="glass-enhanced rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-            <div className="relative z-10">
-              <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">
-                <AnimatedCounter end={95} suffix="%" duration={2500} />
-              </div>
-              <div className="text-white/80 text-lg">Prediction Accuracy</div>
-              <div className="mt-2 text-2xl animate-pulse">🎯</div>
-            </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+            <div className="text-3xl font-bold text-white">95%</div>
+            <div className="text-white/80">Prediction Accuracy</div>
           </div>
-          <div className="glass-enhanced rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-            <div className="relative z-10">
-              <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">24/7</div>
-              <div className="text-white/80 text-lg">AI Support</div>
-              <div className="mt-2 text-2xl animate-pulse">🤖</div>
-            </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+            <div className="text-3xl font-bold text-white">24/7</div>
+            <div className="text-white/80">AI Support</div>
           </div>
         </div>
       </div>
