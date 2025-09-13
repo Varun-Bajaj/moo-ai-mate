@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Heart, Shield, Activity } from "lucide-react";
+import { usePredictionContext } from "@/contexts/PredictionContext";
 
 interface CowData {
   breed: string;
@@ -43,6 +44,7 @@ interface DiseaseResult {
 }
 
 const DiseaseDetectionForm = () => {
+  const { addDiseasePrediction } = usePredictionContext();
   const [cowData, setCowData] = useState<CowData>({
     breed: "",
     age: 0,
@@ -96,6 +98,7 @@ const DiseaseDetectionForm = () => {
 
       const result: DiseaseResult = await response.json();
       setDiseaseResult(result);
+      addDiseasePrediction(result);
     } catch (error) {
       console.error('Error fetching disease detection:', error);
       // Fallback to mock data for development
@@ -115,6 +118,7 @@ const DiseaseDetectionForm = () => {
         ]
       };
       setDiseaseResult(mockResult);
+      addDiseasePrediction(mockResult);
     } finally {
       setIsLoading(false);
     }

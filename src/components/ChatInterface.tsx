@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Send, Bot, User } from "lucide-react";
+import { MessageCircle, Send, Bot, User, Lock, AlertCircle } from "lucide-react";
+import { usePredictionContext } from "@/contexts/PredictionContext";
 
 interface Message {
   id: string;
@@ -13,16 +14,11 @@ interface Message {
 }
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      text: "नमस्ते! मैं आपका डेयरी AI असिस्टेंट हूं। आप मुझसे दूध उत्पादन, गाय के रोग, या फार्म प्रबंधन के बारे में कुछ भी पूछ सकते हैं।",
-      isUser: false,
-      timestamp: new Date()
-    }
-  ]);
+  const { hasAnyPrediction, getLatestPrediction } = usePredictionContext();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [language, setLanguage] = useState<"hi" | "en">("hi");
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages are added
@@ -34,31 +30,82 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
-    if (!inputMessage.trim()) return;
+  // Initialize welcome message when chat becomes available
+  useEffect(() => {
+    if (hasAnyPrediction() && messages.length === 0) {
+      const welcomeMessage: Message = {
+        id: "1",
+        text: language === "hi" 
+          ? "नमस्ते! मैं आपका डेयरी AI असिस्टेंट हूं। आप अपने prediction results के बारे में कुछ भी पूछ सकते हैं।"
+          : "Hello! I'm your Dairy AI Assistant. You can ask me anything about your prediction results.",
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [hasAnyPrediction, language]);
 
-    const newMessage: Message = {
+  const handleSendMessage = async () => {
+    if (!inputMessage.trim() || !hasAnyPrediction()) return;
+
+    const userMessage: Message = {
       id: Date.now().toString(),
       text: inputMessage,
       isUser: true,
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, newMessage]);
+    setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputMessage;
     setInputMessage("");
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const latestPrediction = getLatestPrediction();
+      const requestBody = {
+        question: currentInput,
+        context: latestPrediction ? latestPrediction.data : {},
+        lang: language
+      };
+
+      const response = await fetch('http://localhost:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get AI response');
+      }
+
+      const result = await response.json();
+      
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: language === "hi" 
-          ? "मैं आपके सवाल को समझ गया हूं। कृपया अपनी गाय के बारे में अधिक जानकारी दें जैसे कि नस्ल, उम्र, और वर्तमान स्थिति।"
-          : "I understand your question. Please provide more details about your cow such as breed, age, and current condition.",
+        text: result.answer || (language === "hi" 
+          ? "मैं आपके सवाल को समझ गया हूं। कृपया अपनी गाय के बारे में अधिक जानकारी दें।"
+          : "I understand your question. Please provide more details about your cow."),
         isUser: false,
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: language === "hi" 
+          ? "क्षमा करें, मुझे आपके सवाल का जवाब देने में कुछ समस्या आ रही है। कृपया पुनः प्रयास करें।"
+          : "Sorry, I'm having trouble responding to your question. Please try again.",
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -98,56 +145,96 @@ const ChatInterface = () => {
 
         <div className="max-w-4xl mx-auto">
           <Card className="h-[500px] flex flex-col shadow-card">
-            <CardHeader className="flex flex-row items-center gap-2 py-4 bg-gradient-primary text-white rounded-t-lg">
-              <MessageCircle className="w-5 h-5" />
-              <CardTitle className="text-lg">Dairy AI Assistant</CardTitle>
-              <Badge className="ml-auto bg-white/20">Online</Badge>
-            </CardHeader>
+             <CardHeader className="flex flex-row items-center gap-2 py-4 bg-gradient-primary text-white rounded-t-lg">
+               <MessageCircle className="w-5 h-5" />
+               <CardTitle className="text-lg">Dairy AI Assistant</CardTitle>
+               <Badge className={`ml-auto ${hasAnyPrediction() ? 'bg-white/20' : 'bg-red-500/20'}`}>
+                 {hasAnyPrediction() ? 'Online' : 'Locked'}
+               </Badge>
+             </CardHeader>
             
             <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      message.isUser
-                        ? 'bg-chat-bubble-user text-white'
-                        : 'bg-white border shadow-soft'
-                    }`}
-                  >
-                    <div className="flex items-start gap-2">
-                      {!message.isUser && <Bot className="w-4 h-4 mt-1 text-primary" />}
-                      {message.isUser && <User className="w-4 h-4 mt-1" />}
-                      <div className="flex-1">
-                        <p className={`text-sm ${message.isUser ? 'text-white' : 'text-foreground'}`}>
-                          {message.text}
-                        </p>
-                        <span className={`text-xs ${message.isUser ? 'text-white/70' : 'text-muted-foreground'} mt-1 block`}>
-                          {message.timestamp.toLocaleTimeString()}
-                        </span>
-                      </div>
-                    </div>
+              {!hasAnyPrediction() ? (
+                <div className="flex flex-col items-center justify-center h-full text-center">
+                  <Lock className="w-16 h-16 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">
+                    Chat Locked
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    Please complete at least one prediction (Milk Yield, Disease Detection, or CSV Analysis) to unlock the chat feature.
+                  </p>
+                  <div className="flex gap-2 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      Complete a prediction first
+                    </span>
                   </div>
                 </div>
-              ))}
-              <div ref={messagesEndRef} />
+              ) : (
+                <>
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[80%] rounded-lg p-3 ${
+                          message.isUser
+                            ? 'bg-chat-bubble-user text-white'
+                            : 'bg-white border shadow-soft'
+                        }`}
+                      >
+                        <div className="flex items-start gap-2">
+                          {!message.isUser && <Bot className="w-4 h-4 mt-1 text-primary" />}
+                          {message.isUser && <User className="w-4 h-4 mt-1" />}
+                          <div className="flex-1">
+                            <p className={`text-sm ${message.isUser ? 'text-white' : 'text-foreground'}`}>
+                              {message.text}
+                            </p>
+                            <span className={`text-xs ${message.isUser ? 'text-white/70' : 'text-muted-foreground'} mt-1 block`}>
+                              {message.timestamp.toLocaleTimeString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {isLoading && (
+                    <div className="flex justify-start">
+                      <div className="bg-white border shadow-soft rounded-lg p-3 max-w-[80%]">
+                        <div className="flex items-start gap-2">
+                          <Bot className="w-4 h-4 mt-1 text-primary animate-pulse" />
+                          <div className="flex-1">
+                            <p className="text-sm text-foreground">AI is typing...</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </>
+              )}
             </CardContent>
             
             <div className="p-4 border-t">
               <div className="flex gap-2">
                 <Input
-                  placeholder={language === "hi" ? "अपना सवाल यहां लिखें..." : "Type your question here..."}
+                  placeholder={
+                    hasAnyPrediction() 
+                      ? (language === "hi" ? "अपना सवाल यहां लिखें..." : "Type your question here...")
+                      : "Complete a prediction to unlock chat..."
+                  }
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   className="flex-1"
+                  disabled={!hasAnyPrediction()}
                 />
                 <Button 
                   onClick={handleSendMessage}
                   className="bg-gradient-primary"
                   size="icon"
+                  disabled={!hasAnyPrediction() || isLoading}
                 >
                   <Send className="w-4 h-4" />
                 </Button>

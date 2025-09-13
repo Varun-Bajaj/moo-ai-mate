@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Upload, FileText, Download, BarChart3, AlertCircle, AlertTriangle, Loader2, TrendingUp, Heart, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { usePredictionContext } from "@/contexts/PredictionContext";
 
 interface CowResult {
   cow_id: number;
@@ -21,6 +22,7 @@ interface CSVResponse {
 }
 
 const CSVUploadSection = () => {
+  const { addCSVPrediction } = usePredictionContext();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [csvResults, setCsvResults] = useState<CSVResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +62,7 @@ const CSVUploadSection = () => {
 
       const result: CSVResponse = await response.json();
       setCsvResults(result);
+      addCSVPrediction(result);
     } catch (error) {
       console.error('Error analyzing CSV:', error);
       setError('Failed to analyze CSV file. Please try again.');
@@ -88,6 +91,7 @@ const CSVUploadSection = () => {
         ]
       };
       setCsvResults(mockResults);
+      addCSVPrediction(mockResults);
     } finally {
       setIsLoading(false);
     }

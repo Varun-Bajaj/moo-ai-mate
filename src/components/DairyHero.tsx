@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import heroImage from "@/assets/hero-dairy-farm.jpg";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const DairyHero = () => {
   const scrollToMilkYieldForm = () => {
@@ -22,7 +23,13 @@ const DairyHero = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/60 dark:from-primary/95 dark:to-primary/80"></div>
+        <div className="absolute inset-0 bg-black/20 dark:bg-black/40"></div>
+      </div>
+      
+      {/* Theme Toggle - Fixed Position */}
+      <div className="fixed top-6 right-6 z-50">
+        <ThemeToggle />
       </div>
       
       <div className="relative z-10 container mx-auto px-4 text-center">
@@ -42,7 +49,7 @@ const DairyHero = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button 
             size="lg" 
-            className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold"
+            className="bg-white text-primary hover:bg-white/90 dark:bg-primary dark:text-white dark:hover:bg-primary/90 px-8 py-4 text-lg font-semibold border-2 border-white dark:border-primary"
             onClick={scrollToMilkYieldForm}
           >
             Start Predicting
@@ -50,7 +57,7 @@ const DairyHero = () => {
           <Button 
             variant="outline" 
             size="lg" 
-            className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold"
+            className="bg-transparent text-white border-2 border-white hover:bg-white hover:text-primary dark:border-white/80 dark:hover:bg-white dark:hover:text-primary px-8 py-4 text-lg font-semibold"
             onClick={scrollToChatInterface}
           >
             Chat with AI Assistant
@@ -58,17 +65,17 @@ const DairyHero = () => {
         </div>
         
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+          <div className="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/20 dark:border-white/10">
             <div className="text-3xl font-bold text-white">500+</div>
-            <div className="text-white/80">Farmers Helped</div>
+            <div className="text-white/80 dark:text-white/70">Farmers Helped</div>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+          <div className="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/20 dark:border-white/10">
             <div className="text-3xl font-bold text-white">95%</div>
-            <div className="text-white/80">Prediction Accuracy</div>
+            <div className="text-white/80 dark:text-white/70">Prediction Accuracy</div>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
+          <div className="bg-white/10 dark:bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/20 dark:border-white/10">
             <div className="text-3xl font-bold text-white">24/7</div>
-            <div className="text-white/80">AI Support</div>
+            <div className="text-white/80 dark:text-white/70">AI Support</div>
           </div>
         </div>
       </div>

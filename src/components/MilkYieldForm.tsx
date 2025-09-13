@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Calendar, Droplets } from "lucide-react";
+import { usePredictionContext } from "@/contexts/PredictionContext";
 
 interface CowData {
   breed: string;
@@ -44,6 +45,7 @@ interface PredictionResult {
 }
 
 const MilkYieldForm = () => {
+  const { addYieldPrediction } = usePredictionContext();
   const [cowData, setCowData] = useState<CowData>({
     breed: "",
     age: 0,
@@ -97,6 +99,7 @@ const MilkYieldForm = () => {
 
       const result: PredictionResult = await response.json();
       setPrediction(result);
+      addYieldPrediction(result);
     } catch (error) {
       console.error('Error fetching prediction:', error);
       // Fallback to mock data for development
@@ -118,6 +121,7 @@ const MilkYieldForm = () => {
         ]
       };
       setPrediction(mockPrediction);
+      addYieldPrediction(mockPrediction);
     } finally {
       setIsLoading(false);
     }
@@ -151,37 +155,37 @@ const MilkYieldForm = () => {
               {/* Basic Information */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-foreground">Basic Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="breed">Breed</Label>
-                    <Select onValueChange={(value) => handleInputChange("breed", value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select breed" />
-                      </SelectTrigger>
-                      <SelectContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="breed">Breed</Label>
+                  <Select onValueChange={(value) => handleInputChange("breed", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select breed" />
+                    </SelectTrigger>
+                    <SelectContent>
                         <SelectItem value="Holstein">Holstein</SelectItem>
                         <SelectItem value="Jersey">Jersey</SelectItem>
                         <SelectItem value="Gir">Gir</SelectItem>
                         <SelectItem value="Sahiwal">Sahiwal</SelectItem>
                         <SelectItem value="Murrah">Murrah Buffalo</SelectItem>
                         <SelectItem value="Crossbred">Crossbred</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
                     <Label htmlFor="age">Age (Months)</Label>
-                    <Input
-                      id="age"
-                      type="number"
+                  <Input
+                    id="age"
+                    type="number"
                       placeholder="e.g., 36"
                       value={cowData.age || ''}
                       onChange={(e) => handleInputChange("age", parseFloat(e.target.value) || 0)}
-                    />
-                  </div>
+                  />
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="weight">Weight (kg)</Label>
                     <Input
@@ -193,13 +197,13 @@ const MilkYieldForm = () => {
                     />
                   </div>
                   
-                  <div>
-                    <Label>Lactation Stage</Label>
+                <div>
+                  <Label>Lactation Stage</Label>
                     <Select onValueChange={(value) => handleInputChange("lactation_stage", value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select stage" />
-                      </SelectTrigger>
-                      <SelectContent>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select stage" />
+                    </SelectTrigger>
+                    <SelectContent>
                         <SelectItem value="Early">Early (0-100 days)</SelectItem>
                         <SelectItem value="Mid">Mid (100-200 days)</SelectItem>
                         <SelectItem value="Late">Late (200+ days)</SelectItem>
@@ -386,7 +390,7 @@ const MilkYieldForm = () => {
                     </SelectContent>
                   </Select>
                 </div>
-
+                
                 <div>
                   <Label htmlFor="disease_history">Disease History</Label>
                   <Input
@@ -430,33 +434,33 @@ const MilkYieldForm = () => {
                   
                   <div>
                     <Label htmlFor="humidity">Humidity (%)</Label>
-                    <Input
+                  <Input
                       id="humidity"
-                      type="number"
+                    type="number"
                       placeholder="e.g., 65"
                       value={cowData.humidity || ''}
                       onChange={(e) => handleInputChange("humidity", parseFloat(e.target.value) || 0)}
-                    />
-                  </div>
+                  />
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
                     <Label>Season</Label>
                     <Select onValueChange={(value) => handleInputChange("season", value)}>
-                      <SelectTrigger>
+                    <SelectTrigger>
                         <SelectValue placeholder="Select season" />
-                      </SelectTrigger>
-                      <SelectContent>
+                    </SelectTrigger>
+                    <SelectContent>
                         <SelectItem value="Spring">Spring</SelectItem>
                         <SelectItem value="Summer">Summer</SelectItem>
                         <SelectItem value="Monsoon">Monsoon</SelectItem>
                         <SelectItem value="Winter">Winter</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
                     <Label>Housing Condition</Label>
                     <Select onValueChange={(value) => handleInputChange("housing_condition", value)}>
                       <SelectTrigger>

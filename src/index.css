@@ -83,41 +83,73 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark agricultural theme - deep earth tones */
+    --background: 145 25% 8%;
+    --foreground: 45 30% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 145 20% 12%;
+    --card-foreground: 45 30% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 145 20% 12%;
+    --popover-foreground: 45 30% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Lighter green for dark mode primary */
+    --primary: 145 60% 55%;
+    --primary-foreground: 145 25% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Dark earth secondary */
+    --secondary: 35 25% 18%;
+    --secondary-foreground: 45 30% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Dark muted tones */
+    --muted: 145 15% 15%;
+    --muted-foreground: 145 20% 70%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Dark accent */
+    --accent: 200 40% 20%;
+    --accent-foreground: 45 30% 95%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Dark destructive */
+    --destructive: 15 75% 45%;
+    --destructive-foreground: 45 30% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Dark borders and inputs */
+    --border: 145 20% 20%;
+    --input: 145 20% 12%;
+    --ring: 145 60% 55%;
+
+    /* Success green for dark mode */
+    --success: 145 60% 50%;
+    --success-foreground: 145 25% 8%;
+
+    /* Warning orange for dark mode */
+    --warning: 35 75% 50%;
+    --warning-foreground: 145 25% 8%;
+
+    /* Dark chat colors */
+    --chat-bg: 145 20% 10%;
+    --chat-bubble: 145 60% 35%;
+    --chat-bubble-user: 200 50% 35%;
+
+    /* Dark gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(145 60% 35%) 0%, hsl(145 50% 45%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(145 60% 35%) 0%, hsl(35 75% 45%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(145 20% 12%) 0%, hsl(145 15% 8%) 100%);
+
+    /* Dark shadows */
+    --shadow-soft: 0 2px 10px hsl(145 60% 35% / 0.2);
+    --shadow-card: 0 4px 20px hsl(145 60% 35% / 0.15);
+    --shadow-floating: 0 8px 30px hsl(145 60% 35% / 0.25);
+
+    /* Dark sidebar */
+    --sidebar-background: 145 20% 8%;
+    --sidebar-foreground: 45 30% 95%;
+    --sidebar-primary: 145 60% 55%;
+    --sidebar-primary-foreground: 145 25% 8%;
+    --sidebar-accent: 145 15% 15%;
+    --sidebar-accent-foreground: 45 30% 95%;
+    --sidebar-border: 145 20% 20%;
+    --sidebar-ring: 145 60% 55%;
   }
 }
 
