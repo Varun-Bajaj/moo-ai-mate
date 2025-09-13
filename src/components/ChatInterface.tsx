@@ -23,6 +23,7 @@ const ChatInterface = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [language, setLanguage] = useState<"hi" | "en">("hi");
+  const [isTyping, setIsTyping] = useState(false);
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
@@ -36,9 +37,12 @@ const ChatInterface = () => {
 
     setMessages(prev => [...prev, newMessage]);
     setInputMessage("");
+    setIsTyping(true);
 
-    // Simulate AI response
+    // Simulate typing delay
     setTimeout(() => {
+      setIsTyping(false);
+      
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: language === "hi" 
@@ -48,7 +52,7 @@ const ChatInterface = () => {
         timestamp: new Date()
       };
       setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    }, 2000);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -98,10 +102,10 @@ const ChatInterface = () => {
               {messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} animate-bubble-in`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
+                    className={`max-w-[80%] rounded-lg p-3 glass-enhanced hover-scale transition-all duration-300 ${
                       message.isUser
                         ? 'bg-chat-bubble-user text-white'
                         : 'bg-white border shadow-soft'
@@ -122,6 +126,21 @@ const ChatInterface = () => {
                   </div>
                 </div>
               ))}
+              
+              {isTyping && (
+                <div className="flex justify-start animate-bubble-in">
+                  <div className="bg-white border shadow-soft rounded-lg p-3 glass-enhanced">
+                    <div className="flex items-start gap-2">
+                      <Bot className="w-4 h-4 mt-1 text-primary" />
+                      <div className="typing-indicator">
+                        <div className="typing-dot animate-typing-dot"></div>
+                        <div className="typing-dot animate-typing-dot"></div>
+                        <div className="typing-dot animate-typing-dot"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </CardContent>
             
             <div className="p-4 border-t">

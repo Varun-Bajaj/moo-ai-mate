@@ -233,3 +233,91 @@
   .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
   .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
 }
+
+/* Enhanced Animations */
+/* Milk Drop Animation */
+.milk-drops::before,
+.milk-drops::after {
+  content: '💧';
+  position: absolute;
+  font-size: 1.5rem;
+  animation: milkDrop 4s ease-in-out infinite;
+  opacity: 0.7;
+}
+
+.milk-drops::before {
+  top: 10%;
+  left: 20%;
+  animation-delay: 1s;
+}
+
+.milk-drops::after {
+  top: 30%;
+  right: 25%;
+  animation-delay: 3s;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--muted-foreground));
+  animation: typingDot 1.4s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Drag and Drop Zone */
+.drag-zone {
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, 
+    hsl(var(--card)) 0%, 
+    hsl(var(--card)/0.8) 100%);
+  border: 2px dashed hsl(var(--border));
+}
+
+.drag-zone.drag-over {
+  border-color: hsl(var(--primary));
+  background: linear-gradient(135deg, 
+    hsl(var(--primary)/0.1) 0%, 
+    hsl(var(--primary)/0.05) 100%);
+  transform: scale(1.02);
+}
+
+/* Counter Animation */
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Disease Risk Animations */
+.risk-high {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+.risk-medium {
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Glass Card Enhanced */
+.glass-enhanced {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}

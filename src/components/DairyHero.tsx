@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import heroImage from "@/assets/hero-dairy-farm.jpg";
+import AnimatedCounter from "./AnimatedCounter";
 
 const DairyHero = () => {
   return (
-    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden floating-orbs">
+    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden floating-orbs milk-drops">
       {/* Animated background */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat parallax-slow"
@@ -14,10 +15,18 @@ const DairyHero = () => {
         <div className="absolute inset-0 bg-gradient-mesh opacity-20"></div>
       </div>
       
-      {/* Floating geometric shapes */}
+      {/* Enhanced floating elements */}
       <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-glow rounded-full opacity-60 animate-float"></div>
       <div className="absolute bottom-32 right-16 w-32 h-32 bg-gradient-floating rounded-lg rotate-45 opacity-40 animate-pulse-glow"></div>
       <div className="absolute top-1/2 left-1/4 w-16 h-16 border-2 border-white/30 rounded-full animate-ping"></div>
+      
+      {/* Animated cow emoji */}
+      <div className="absolute top-1/3 right-1/3 text-4xl animate-bounce opacity-70">🐄</div>
+      <div className="absolute bottom-1/4 left-1/3 text-3xl animate-float opacity-60">🌾</div>
+      
+      {/* Light particles */}
+      <div className="absolute top-16 right-20 w-2 h-2 bg-white rounded-full animate-ping opacity-80"></div>
+      <div className="absolute bottom-20 left-16 w-3 h-3 bg-white rounded-full animate-pulse opacity-60"></div>
       
       <div className="relative z-10 container mx-auto px-4 text-center slide-up">
         <Badge className="mb-6 bg-white/20 text-white border border-white/30 text-sm font-medium glass hover-scale glow-on-hover">
@@ -47,20 +56,33 @@ const DairyHero = () => {
         </div>
         
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center stagger-children">
-          <div className="glass rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group">
-            <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">500+</div>
-            <div className="text-white/80 text-lg">Farmers Helped</div>
-            <div className="mt-2 text-2xl animate-pulse">🚜</div>
+          <div className="glass-enhanced rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">
+                <AnimatedCounter end={500} suffix="+" duration={2000} />
+              </div>
+              <div className="text-white/80 text-lg">Farmers Helped</div>
+              <div className="mt-2 text-2xl animate-pulse">🚜</div>
+            </div>
           </div>
-          <div className="glass rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group">
-            <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">95%</div>
-            <div className="text-white/80 text-lg">Prediction Accuracy</div>
-            <div className="mt-2 text-2xl animate-pulse">🎯</div>
+          <div className="glass-enhanced rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">
+                <AnimatedCounter end={95} suffix="%" duration={2500} />
+              </div>
+              <div className="text-white/80 text-lg">Prediction Accuracy</div>
+              <div className="mt-2 text-2xl animate-pulse">🎯</div>
+            </div>
           </div>
-          <div className="glass rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group">
-            <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">24/7</div>
-            <div className="text-white/80 text-lg">AI Support</div>
-            <div className="mt-2 text-2xl animate-pulse">🤖</div>
+          <div className="glass-enhanced rounded-2xl p-8 hover-scale glow-on-hover border border-white/20 group overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="text-4xl font-bold text-white mb-2 gradient-text group-hover:animate-bounce">24/7</div>
+              <div className="text-white/80 text-lg">AI Support</div>
+              <div className="mt-2 text-2xl animate-pulse">🤖</div>
+            </div>
           </div>
         </div>
       </div>

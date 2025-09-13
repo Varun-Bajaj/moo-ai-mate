@@ -135,6 +135,41 @@ export default {
         pulse: {
           "50%": { opacity: "0.5" },
         },
+        milkDrop: {
+          "0%": { transform: "translateY(-20px)", opacity: "0" },
+          "50%": { transform: "translateY(20px)", opacity: "1" },
+          "100%": { transform: "translateY(60px)", opacity: "0" },
+        },
+        typingDot: {
+          "0%, 80%, 100%": { transform: "scale(0.8)", opacity: "0.5" },
+          "40%": { transform: "scale(1)", opacity: "1" },
+        },
+        countUp: {
+          "0%": { transform: "scale(0.5)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        shake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "10%, 30%, 50%, 70%, 90%": { transform: "translateX(-2px)" },
+          "20%, 40%, 60%, 80%": { transform: "translateX(2px)" },
+        },
+        pulseWarning: {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.7", transform: "scale(1.05)" },
+        },
+        slideInLeft: {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        slideInRight: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        bubbleIn: {
+          "0%": { transform: "scale(0.3) translateY(100%)", opacity: "0" },
+          "50%": { transform: "scale(1.05) translateY(-10%)", opacity: "0.8" },
+          "100%": { transform: "scale(1) translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -148,6 +183,14 @@ export default {
         spin: "spin 1s linear infinite",
         ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "milk-drop": "milkDrop 4s ease-in-out infinite",
+        "typing-dot": "typingDot 1.4s ease-in-out infinite",
+        "count-up": "countUp 0.8s ease-out",
+        shake: "shake 0.5s ease-in-out infinite",
+        "pulse-warning": "pulseWarning 2s ease-in-out infinite",
+        "slide-in-left": "slideInLeft 0.6s ease-out",
+        "slide-in-right": "slideInRight 0.6s ease-out",
+        "bubble-in": "bubbleIn 0.4s ease-out",
       },
     },
   },
