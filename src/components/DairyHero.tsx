@@ -33,7 +33,7 @@ const DairyHero = () => {
           <Button 
             variant="outline" 
             size="lg" 
-            className="border-white text-white hover:bg-white hover:text-primary px-8 py-4 text-lg font-semibold"
+            className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold"
           >
             Chat with AI Assistant
           </Button>
