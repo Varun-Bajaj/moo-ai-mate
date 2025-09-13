@@ -3,6 +3,19 @@ import { Badge } from "@/components/ui/badge";
 import heroImage from "@/assets/hero-dairy-farm.jpg";
 
 const DairyHero = () => {
+  const scrollToMilkYieldForm = () => {
+    const element = document.getElementById('milk-yield-form');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const scrollToChatInterface = () => {
+    const element = document.getElementById('chat-interface');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
       <div 
@@ -27,13 +40,18 @@ const DairyHero = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold">
+          <Button 
+            size="lg" 
+            className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold"
+            onClick={scrollToMilkYieldForm}
+          >
             Start Predicting
           </Button>
           <Button 
             variant="outline" 
             size="lg" 
             className="bg-white text-primary hover:bg-white/90 px-8 py-4 text-lg font-semibold"
+            onClick={scrollToChatInterface}
           >
             Chat with AI Assistant
           </Button>

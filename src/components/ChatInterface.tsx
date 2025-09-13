@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,16 @@ const ChatInterface = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [language, setLanguage] = useState<"hi" | "en">("hi");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages are added
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
@@ -122,6 +132,7 @@ const ChatInterface = () => {
                   </div>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </CardContent>
             
             <div className="p-4 border-t">

@@ -32,6 +32,31 @@ const tools = [
 ];
 
 const ToolsSection = () => {
+  const handleGetStarted = (toolId: string) => {
+    switch (toolId) {
+      case 'milk-yield':
+        const milkYieldElement = document.getElementById('milk-yield-form');
+        if (milkYieldElement) {
+          milkYieldElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
+      case 'disease-detection':
+        const diseaseElement = document.getElementById('disease-detection-form');
+        if (diseaseElement) {
+          diseaseElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
+      case 'csv-analysis':
+        const csvElement = document.getElementById('csv-upload-section');
+        if (csvElement) {
+          csvElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -76,6 +101,7 @@ const ToolsSection = () => {
                 <Button 
                   className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
                   size="lg"
+                  onClick={() => handleGetStarted(tool.id)}
                 >
                   Get Started
                 </Button>

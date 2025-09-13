@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Calendar, Droplets } from "lucide-react";
+import { AlertTriangle, Heart, Shield, Activity } from "lucide-react";
 
 interface CowData {
   breed: string;
@@ -35,15 +35,14 @@ interface CowData {
   lang: string;
 }
 
-interface PredictionResult {
-  predicted_yield: number;
-  predicted_weekly_yield: number;
-  optimization_hint: string;
+interface DiseaseResult {
+  disease_prediction: string;
+  prevention: string;
   explanation: string;
   tips: string[];
 }
 
-const MilkYieldForm = () => {
+const DiseaseDetectionForm = () => {
   const [cowData, setCowData] = useState<CowData>({
     breed: "",
     age: 0,
@@ -72,18 +71,18 @@ const MilkYieldForm = () => {
     lang: "en"
   });
   
-  const [prediction, setPrediction] = useState<PredictionResult | null>(null);
+  const [diseaseResult, setDiseaseResult] = useState<DiseaseResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (field: keyof CowData, value: string | number) => {
     setCowData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handlePredict = async () => {
+  const handleDetect = async () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:8000/predict_yield', {
+      const response = await fetch('http://localhost:8000/detect_disease', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,46 +91,44 @@ const MilkYieldForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch prediction');
+        throw new Error('Failed to fetch disease detection');
       }
 
-      const result: PredictionResult = await response.json();
-      setPrediction(result);
+      const result: DiseaseResult = await response.json();
+      setDiseaseResult(result);
     } catch (error) {
-      console.error('Error fetching prediction:', error);
+      console.error('Error fetching disease detection:', error);
       // Fallback to mock data for development
-      const mockPrediction: PredictionResult = {
-        predicted_yield: 8.85,
-        predicted_weekly_yield: 61.97,
-        optimization_hint: "If you improve feed by 10%, yield may rise to ~8.85 L/day.",
-        explanation: "Hello Farmer. Your cow gives 8.85 liters of milk every day. In one week, your cow gives 8.85 x 7 = 62 liters of milk.",
+      const mockResult: DiseaseResult = {
+        disease_prediction: "Healthy - No immediate concerns detected",
+        prevention: "Continue current care practices. Regular monitoring recommended.",
+        explanation: "Hello Farmer. Your cow appears to be in good health based on the provided data. All vital signs are within normal ranges, and no concerning symptoms were detected.",
         tips: [
           "Hello Farmer.",
-          "Your cow gives 8.85 liters of milk every day.",
-          "In one week, your cow gives 8.85 x 7 = 62 liters of milk.",
-          "Food is very important for milk. Good food makes more milk. Bad food makes less milk.",
-          "Here are 3 tips to get more milk:",
-          "1. Give your cow fresh water every day.",
-          "2. Give your cow good food with nutrients.",
-          "3. Keep your cow clean and happy.",
-          "Remember, happy cow gives more milk!"
+          "Your cow appears to be in good health.",
+          "Continue regular feeding and care practices.",
+          "Monitor for any changes in behavior or appetite.",
+          "Schedule regular veterinary check-ups.",
+          "Maintain clean housing conditions.",
+          "Ensure proper vaccination schedule is followed.",
+          "Watch for early signs of illness."
         ]
       };
-      setPrediction(mockPrediction);
+      setDiseaseResult(mockResult);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <section className="py-20 bg-background">
+    <section id="disease-detection-form" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Milk Yield Prediction
+            Disease Detection
           </h2>
           <p className="text-xl text-muted-foreground">
-            Enter your cow's details to get accurate AI-powered yield predictions
+            Enter your cow's details for early disease detection and prevention recommendations
           </p>
         </div>
 
@@ -139,11 +136,11 @@ const MilkYieldForm = () => {
           <Card className="shadow-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Droplets className="w-5 h-5 text-primary" />
-                Cow Details
+                <AlertTriangle className="w-5 h-5 text-warning" />
+                Cow Health Details
               </CardTitle>
               <CardDescription>
-                Provide information about your cow for accurate predictions
+                Provide comprehensive information about your cow for accurate disease detection
               </CardDescription>
             </CardHeader>
             
@@ -476,10 +473,10 @@ const MilkYieldForm = () => {
               {/* Language and Description */}
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="farmer_description">Additional Notes (Optional)</Label>
+                  <Label htmlFor="farmer_description">Additional Symptoms/Notes (Optional)</Label>
                   <Input
                     id="farmer_description"
-                    placeholder="Any additional information about the cow..."
+                    placeholder="Describe any symptoms or concerns..."
                     value={cowData.farmer_description}
                     onChange={(e) => handleInputChange("farmer_description", e.target.value)}
                   />
@@ -500,57 +497,48 @@ const MilkYieldForm = () => {
               </div>
               
               <Button 
-                onClick={handlePredict}
+                onClick={handleDetect}
                 disabled={isLoading || !cowData.breed || !cowData.age}
                 className="w-full bg-gradient-primary text-lg py-3"
                 size="lg"
               >
-                {isLoading ? "Analyzing..." : "Predict Milk Yield"}
+                {isLoading ? "Analyzing..." : "Detect Disease"}
               </Button>
             </CardContent>
           </Card>
 
-          {prediction && (
+          {diseaseResult && (
             <Card className="shadow-card bg-gradient-card">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-success">
-                  <TrendingUp className="w-5 h-5" />
-                  Prediction Results
+                <CardTitle className="flex items-center gap-2 text-warning">
+                  <Heart className="w-5 h-5" />
+                  Disease Detection Results
                 </CardTitle>
                 <CardDescription>
-                  AI-powered predictions based on your cow's data
+                  AI-powered health analysis and recommendations
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-white rounded-lg shadow-soft">
-                    <Calendar className="w-8 h-8 text-primary mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-foreground">{prediction.predicted_yield}L</div>
-                    <div className="text-sm text-muted-foreground">Daily Yield</div>
-                  </div>
-                  
-                  <div className="text-center p-4 bg-white rounded-lg shadow-soft">
-                    <TrendingUp className="w-8 h-8 text-success mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-foreground">{prediction.predicted_weekly_yield}L</div>
-                    <div className="text-sm text-muted-foreground">Weekly Yield</div>
-                  </div>
+                <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                  <h4 className="font-semibold text-orange-900 mb-2">🩺 Disease Prediction</h4>
+                  <p className="text-orange-800 text-sm">{diseaseResult.disease_prediction}</p>
                 </div>
                 
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h4 className="font-semibold text-blue-900 mb-2">💡 Optimization Hint</h4>
-                  <p className="text-blue-800 text-sm">{prediction.optimization_hint}</p>
+                  <h4 className="font-semibold text-blue-900 mb-2">🛡️ Prevention Measures</h4>
+                  <p className="text-blue-800 text-sm">{diseaseResult.prevention}</p>
                 </div>
                 
                 <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <h4 className="font-semibold text-green-900 mb-3">📝 Detailed Explanation</h4>
-                  <div className="text-green-800 text-sm whitespace-pre-line">{prediction.explanation}</div>
+                  <h4 className="font-semibold text-green-900 mb-3">📝 Detailed Analysis</h4>
+                  <div className="text-green-800 text-sm whitespace-pre-line">{diseaseResult.explanation}</div>
                 </div>
                 
                 <div>
-                  <h4 className="font-semibold text-foreground mb-3">🎯 Key Tips</h4>
+                  <h4 className="font-semibold text-foreground mb-3">🎯 Health Tips</h4>
                   <ul className="space-y-2">
-                    {prediction.tips.map((tip, index) => (
+                    {diseaseResult.tips.map((tip, index) => (
                       <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
                         <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
                         {tip}
@@ -567,4 +555,4 @@ const MilkYieldForm = () => {
   );
 };
 
-export default MilkYieldForm;
+export default DiseaseDetectionForm;
