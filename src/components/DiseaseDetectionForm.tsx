@@ -84,7 +84,7 @@ const DiseaseDetectionForm = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:8000/detect_disease', {
+        const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_disease', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

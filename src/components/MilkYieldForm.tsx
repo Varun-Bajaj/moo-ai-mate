@@ -85,7 +85,7 @@ const MilkYieldForm = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:8000/predict_yield', {
+        const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_yield', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

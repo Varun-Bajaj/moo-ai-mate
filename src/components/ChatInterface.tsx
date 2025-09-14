@@ -68,7 +68,7 @@ const ChatInterface = () => {
         lang: language
       };
 
-      const response = await fetch('http://localhost:8000/chat', {
+        const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

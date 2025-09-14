@@ -51,7 +51,7 @@ const CSVUploadSection = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await fetch('http://localhost:8000/predict_csv', {
+        const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_csv', {
         method: 'POST',
         body: formData,
       });
