@@ -155,11 +155,13 @@ const DiseaseDetectionForm = () => {
     
     try {
         const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_disease', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cowData),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        // 'Access-Control-Allow-Origin': '*', // Add this
+      },
+      body: JSON.stringify(cowData),
       });
 
       if (!response.ok) {
@@ -196,11 +198,16 @@ const DiseaseDetectionForm = () => {
   };
 
   const handleDownloadReport = () => {
-    if (diseaseResult?.report_file) {
-      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download_report/${diseaseResult.report_file}`;
-      window.open(downloadUrl, '_blank');
-    }
-  };
+  if (diseaseResult?.report_file) {
+    // Extract just the filename if it includes the full path
+    const filename = diseaseResult.report_file.includes('/') 
+      ? diseaseResult.report_file.split('/').pop() 
+      : diseaseResult.report_file;
+    
+    const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${filename}`;
+    window.open(downloadUrl, '_blank');
+  }
+};
 
   return (
     <section id="disease-detection-form" className="py-20 bg-background">

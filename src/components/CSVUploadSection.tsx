@@ -1,9 +1,26 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Upload, FileText, Download, BarChart3, AlertCircle, AlertTriangle, Loader2, TrendingUp, Heart, CheckCircle } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  Download,
+  BarChart3,
+  AlertCircle,
+  AlertTriangle,
+  Loader2,
+  TrendingUp,
+  Heart,
+  CheckCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { usePredictionContext } from "@/contexts/PredictionContext";
 
@@ -30,18 +47,18 @@ const CSVUploadSection = () => {
   const [error, setError] = useState<string | null>(null);
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type === 'text/csv') {
+    if (file && file.type === "text/csv") {
       setSelectedFile(file);
       setError(null);
       setCsvResults(null);
     } else {
-      setError('Please select a valid CSV file');
+      setError("Please select a valid CSV file");
     }
   };
 
   const handleAnalyze = async () => {
     if (!selectedFile) {
-      setError('Please select a CSV file first');
+      setError("Please select a CSV file first");
       return;
     }
 
@@ -50,24 +67,32 @@ const CSVUploadSection = () => {
 
     try {
       const formData = new FormData();
-      formData.append('file', selectedFile);
+      formData.append("file", selectedFile);
 
-        const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_csv', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        "https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_csv",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            // "Access-Control-Allow-Origin": "*", // Add this
+            // Don't set Content-Type for FormData, let browser set it with boundary
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to analyze CSV file');
+        throw new Error("Failed to analyze CSV file");
       }
 
       const result: CSVResponse = await response.json();
       setCsvResults(result);
       addCSVPrediction(result);
     } catch (error) {
-      console.error('Error analyzing CSV:', error);
-      setError('Failed to analyze CSV file. Please try again.');
-      
+      console.error("Error analyzing CSV:", error);
+      setError("Failed to analyze CSV file. Please try again.");
+
       // Fallback to mock data for development
       const mockResults: CSVResponse = {
         results: [
@@ -76,21 +101,27 @@ const CSVUploadSection = () => {
             predicted_yield: 10.83,
             predicted_weekly_yield: 75.79,
             disease_prediction: "Healthy",
-            prevention: "Maintain proper feed and clean water. Routine vet check-ups recommended.",
-            yield_explanation: "Hello Farmer. Your cow gives 10.83 liters of milk every day. In one week, your cow gives 75.79 liters of milk. Food is very important for milk. Good food makes more milk.",
-            disease_explanation: "Your cow appears to be healthy based on the provided data. Continue regular care practices."
+            prevention:
+              "Maintain proper feed and clean water. Routine vet check-ups recommended.",
+            yield_explanation:
+              "Hello Farmer. Your cow gives 10.83 liters of milk every day. In one week, your cow gives 75.79 liters of milk. Food is very important for milk. Good food makes more milk.",
+            disease_explanation:
+              "Your cow appears to be healthy based on the provided data. Continue regular care practices.",
           },
           {
             cow_id: 2,
             predicted_yield: 8.4,
             predicted_weekly_yield: 58.8,
             disease_prediction: "Healthy",
-            prevention: "Maintain proper feed and clean water. Routine vet check-ups recommended.",
-            yield_explanation: "Hello Farmer. Your cow gives 8.4 liters of milk every day. Weekly milk: 58.8 liters. If you give 10% more food, milk will increase.",
-            disease_explanation: "Your cow looks healthy. Maybe cow is not eating well or water is not clean. Give good food and clean water."
-          }
+            prevention:
+              "Maintain proper feed and clean water. Routine vet check-ups recommended.",
+            yield_explanation:
+              "Hello Farmer. Your cow gives 8.4 liters of milk every day. Weekly milk: 58.8 liters. If you give 10% more food, milk will increase.",
+            disease_explanation:
+              "Your cow looks healthy. Maybe cow is not eating well or water is not clean. Give good food and clean water.",
+          },
         ],
-        report_file: "csv_analysis_report_mock.pdf"
+        report_file: "csv_analysis_report_mock.pdf",
       };
       setCsvResults(mockResults);
       addCSVPrediction(mockResults);
@@ -101,8 +132,13 @@ const CSVUploadSection = () => {
 
   const handleDownloadReport = () => {
     if (csvResults?.report_file) {
-      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download_report/${csvResults.report_file}`;
-      window.open(downloadUrl, '_blank');
+      // Extract just the filename if it includes the full path
+      const filename = csvResults.report_file.includes("/")
+        ? csvResults.report_file.split("/").pop()
+        : csvResults.report_file;
+
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${filename}`;
+      window.open(downloadUrl, "_blank");
     }
   };
 
@@ -114,11 +150,11 @@ Jersey,24,400,Mid,1,18,Lactating,Mixed Feed,20,2,1.5,5,7,12,38.2,68,Up to Date,N
 Gir,48,600,Late,3,30,Dry,Silage,30,3,3,8,9,8,38.8,75,Due Soon,Mastitis (2023),Low Activity,22,60,Monsoon,Average,,en
 Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Normal,26,68,Winter,Good,,en`;
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'dairy_farm_template.csv';
+    a.download = "dairy_farm_template.csv";
     a.click();
     window.URL.revokeObjectURL(url);
   };
@@ -131,7 +167,8 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
             Bulk CSV Analysis
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Upload your farm data in CSV format for comprehensive analysis and insights
+            Upload your farm data in CSV format for comprehensive analysis and
+            insights
           </p>
         </div>
 
@@ -171,8 +208,7 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                 )}
               </div>
 
-
-              <Button 
+              <Button
                 onClick={handleAnalyze}
                 disabled={isLoading || !selectedFile}
                 className="w-full bg-gradient-primary hover:opacity-90"
@@ -202,12 +238,13 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                   Download Template
                 </CardTitle>
                 <CardDescription>
-                  Download our CSV template to ensure your data is in the correct format
+                  Download our CSV template to ensure your data is in the
+                  correct format
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full"
                   onClick={handleDownloadTemplate}
                 >
@@ -225,34 +262,50 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <Badge className="bg-success text-success-foreground">✓</Badge>
+                    <Badge className="bg-success text-success-foreground">
+                      ✓
+                    </Badge>
                     <div>
                       <h4 className="font-semibold">Batch Predictions</h4>
-                      <p className="text-sm text-muted-foreground">Get milk yield predictions for all your cows at once</p>
+                      <p className="text-sm text-muted-foreground">
+                        Get milk yield predictions for all your cows at once
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start gap-3">
-                    <Badge className="bg-success text-success-foreground">✓</Badge>
+                    <Badge className="bg-success text-success-foreground">
+                      ✓
+                    </Badge>
                     <div>
                       <h4 className="font-semibold">Farm Insights</h4>
-                      <p className="text-sm text-muted-foreground">Comprehensive analysis of your entire herd</p>
+                      <p className="text-sm text-muted-foreground">
+                        Comprehensive analysis of your entire herd
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start gap-3">
-                    <Badge className="bg-success text-success-foreground">✓</Badge>
+                    <Badge className="bg-success text-success-foreground">
+                      ✓
+                    </Badge>
                     <div>
                       <h4 className="font-semibold">Export Reports</h4>
-                      <p className="text-sm text-muted-foreground">Download detailed reports in PDF or Excel format</p>
+                      <p className="text-sm text-muted-foreground">
+                        Download detailed reports in PDF or Excel format
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start gap-3">
-                    <Badge className="bg-success text-success-foreground">✓</Badge>
+                    <Badge className="bg-success text-success-foreground">
+                      ✓
+                    </Badge>
                     <div>
                       <h4 className="font-semibold">Data Visualization</h4>
-                      <p className="text-sm text-muted-foreground">Charts and graphs to visualize your farm data</p>
+                      <p className="text-sm text-muted-foreground">
+                        Charts and graphs to visualize your farm data
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -271,7 +324,10 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <p>• Maximum file size: 10MB</p>
                   <p>• Supported format: CSV only</p>
-                  <p>• Required columns: breed, age, weight, lactation_stage, parity</p>
+                  <p>
+                    • Required columns: breed, age, weight, lactation_stage,
+                    parity
+                  </p>
                   <p>• All 25 columns must be present for accurate analysis</p>
                   <p>• Use our template for best results</p>
                 </div>
@@ -288,44 +344,56 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                 Analysis Results
               </h3>
               <p className="text-lg text-muted-foreground">
-                Detailed insights for {csvResults.results.length} cow{csvResults.results.length > 1 ? 's' : ''}
+                Detailed insights for {csvResults.results.length} cow
+                {csvResults.results.length > 1 ? "s" : ""}
               </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {csvResults.results.map((result, index) => (
-                <Card key={result.cow_id} className="shadow-card bg-gradient-card">
+                <Card
+                  key={result.cow_id}
+                  className="shadow-card bg-gradient-card"
+                >
                   <CardHeader className="pb-4">
                     <div className="flex items-center justify-between">
                       <CardTitle className="flex items-center gap-2">
                         <span className="text-2xl">🐄</span>
                         Cow #{result.cow_id}
                       </CardTitle>
-                      <Badge 
+                      <Badge
                         className={`${
-                          result.disease_prediction === 'Healthy' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-orange-100 text-orange-800'
+                          result.disease_prediction === "Healthy"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-orange-100 text-orange-800"
                         }`}
                       >
                         {result.disease_prediction}
                       </Badge>
                     </div>
                   </CardHeader>
-                  
+
                   <CardContent className="space-y-6">
                     {/* Yield Predictions */}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                         <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
-                        <div className="text-xl font-bold text-foreground">{result.predicted_yield}L</div>
-                        <div className="text-sm text-muted-foreground">Daily Yield</div>
+                        <div className="text-xl font-bold text-foreground">
+                          {result.predicted_yield}L
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Daily Yield
+                        </div>
                       </div>
-                      
+
                       <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                         <BarChart3 className="w-6 h-6 text-success mx-auto mb-2" />
-                        <div className="text-xl font-bold text-foreground">{result.predicted_weekly_yield}L</div>
-                        <div className="text-sm text-muted-foreground">Weekly Yield</div>
+                        <div className="text-xl font-bold text-foreground">
+                          {result.predicted_weekly_yield}L
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Weekly Yield
+                        </div>
                       </div>
                     </div>
 
@@ -335,7 +403,9 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                         <Heart className="w-4 h-4" />
                         Health Prevention
                       </h4>
-                      <p className="text-blue-800 text-sm">{result.prevention}</p>
+                      <p className="text-blue-800 text-sm">
+                        {result.prevention}
+                      </p>
                     </div>
 
                     {/* Yield Explanation */}
@@ -372,17 +442,27 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                 </div>
                 <div className="text-muted-foreground">Total Cows Analyzed</div>
               </div>
-              
+
               <div className="text-center p-6 bg-white rounded-lg shadow-soft">
                 <div className="text-3xl font-bold text-success mb-2">
-                  {(csvResults.results.reduce((sum, r) => sum + r.predicted_yield, 0) / csvResults.results.length).toFixed(1)}L
+                  {(
+                    csvResults.results.reduce(
+                      (sum, r) => sum + r.predicted_yield,
+                      0
+                    ) / csvResults.results.length
+                  ).toFixed(1)}
+                  L
                 </div>
                 <div className="text-muted-foreground">Average Daily Yield</div>
               </div>
-              
+
               <div className="text-center p-6 bg-white rounded-lg shadow-soft">
                 <div className="text-3xl font-bold text-warning mb-2">
-                  {csvResults.results.filter(r => r.disease_prediction === 'Healthy').length}
+                  {
+                    csvResults.results.filter(
+                      (r) => r.disease_prediction === "Healthy"
+                    ).length
+                  }
                 </div>
                 <div className="text-muted-foreground">Healthy Cows</div>
               </div>
@@ -390,7 +470,7 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
 
             {/* Download Report Button */}
             <div className="mt-8 text-center">
-              <Button 
+              <Button
                 onClick={handleDownloadReport}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
                 size="lg"

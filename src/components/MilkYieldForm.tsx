@@ -156,11 +156,13 @@ const MilkYieldForm = () => {
     
     try {
         const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_yield', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cowData),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        // 'Access-Control-Allow-Origin': '*', // Add this
+      },
+      body: JSON.stringify(cowData),
       });
 
       if (!response.ok) {
@@ -199,11 +201,16 @@ const MilkYieldForm = () => {
   };
 
   const handleDownloadReport = () => {
-    if (prediction?.report_file) {
-      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download_report/${prediction.report_file}`;
-      window.open(downloadUrl, '_blank');
-    }
-  };
+  if (prediction?.report_file) {
+    // Extract just the filename if it includes the full path
+    const filename = prediction.report_file.includes('/') 
+      ? prediction.report_file.split('/').pop() 
+      : prediction.report_file;
+    
+    const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${filename}`;
+    window.open(downloadUrl, '_blank');
+  }
+};
 
   return (
     <section className="py-20 bg-background">
