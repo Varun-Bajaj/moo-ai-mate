@@ -63,7 +63,7 @@ const LanguageToggle: React.FC = () => {
         <Button
           variant="outline"
           size="sm"
-          className="bg-white/10 dark:bg-white/5 border-white/20 dark:border-white/10 text-white hover:bg-white/20 dark:hover:bg-white/10 backdrop-blur-sm"
+          className="bg-white/90 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-gray-700 backdrop-blur-sm shadow-lg"
           disabled={isLoading}
         >
           <Globe className="h-4 w-4 mr-2" />
@@ -77,7 +77,7 @@ const LanguageToggle: React.FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-48 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+        className="w-48 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 shadow-xl"
       >
         {languages.map((lang) => (
           <DropdownMenuItem
