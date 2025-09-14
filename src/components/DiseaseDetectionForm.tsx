@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { AlertTriangle, Heart, Shield, Activity } from "lucide-react";
+import { AlertTriangle, Heart, Shield, Activity, Download, AlertCircle } from "lucide-react";
 import { usePredictionContext } from "@/contexts/PredictionContext";
 
 interface CowData {
@@ -41,6 +41,7 @@ interface DiseaseResult {
   prevention: string;
   explanation: string;
   tips: string[];
+  report_file: string;
 }
 
 const DiseaseDetectionForm = () => {
@@ -75,13 +76,82 @@ const DiseaseDetectionForm = () => {
   
   const [diseaseResult, setDiseaseResult] = useState<DiseaseResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [showValidation, setShowValidation] = useState(false);
 
   const handleInputChange = (field: keyof CowData, value: string | number) => {
     setCowData(prev => ({ ...prev, [field]: value }));
+    // Clear validation errors when user starts typing
+    if (validationErrors.length > 0) {
+      setValidationErrors([]);
+      setShowValidation(false);
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const errors: string[] = [];
+    
+    // Required string fields
+    const requiredStringFields: (keyof CowData)[] = [
+      'breed', 'lactation_stage', 'reproductive_status', 'feed_type', 
+      'vaccination_status', 'disease_history', 'activity_alert', 'season', 'housing_condition'
+    ];
+    
+    requiredStringFields.forEach(field => {
+      if (!cowData[field] || cowData[field] === '') {
+        errors.push(`${field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} is required`);
+      }
+    });
+    
+    // Required numeric fields
+    const requiredNumericFields: (keyof CowData)[] = [
+      'age', 'weight', 'parity', 'past_yield', 'feed_qty', 'feeding_freq',
+      'walking_distance', 'grazing_hours', 'rumination_time', 'resting_hours',
+      'body_temp', 'heart_rate', 'ambient_temp', 'humidity'
+    ];
+    
+    requiredNumericFields.forEach(field => {
+      if (cowData[field] === 0 || cowData[field] === '') {
+        errors.push(`${field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} is required`);
+      }
+    });
+    
+    setValidationErrors(errors);
+    return errors.length === 0;
+  };
+
+  const isFormValid = (): boolean => {
+    const requiredStringFields: (keyof CowData)[] = [
+      'breed', 'lactation_stage', 'reproductive_status', 'feed_type', 
+      'vaccination_status', 'disease_history', 'activity_alert', 'season', 'housing_condition'
+    ];
+    
+    const requiredNumericFields: (keyof CowData)[] = [
+      'age', 'weight', 'parity', 'past_yield', 'feed_qty', 'feeding_freq',
+      'walking_distance', 'grazing_hours', 'rumination_time', 'resting_hours',
+      'body_temp', 'heart_rate', 'ambient_temp', 'humidity'
+    ];
+    
+    const stringFieldsValid = requiredStringFields.every(field => 
+      cowData[field] && cowData[field] !== ''
+    );
+    
+    const numericFieldsValid = requiredNumericFields.every(field => 
+      cowData[field] !== 0 && cowData[field] !== ''
+    );
+    
+    return stringFieldsValid && numericFieldsValid;
   };
 
   const handleDetect = async () => {
+    // Validate form before proceeding
+    if (!validateForm()) {
+      setShowValidation(true);
+      return;
+    }
+    
     setIsLoading(true);
+    setShowValidation(false);
     
     try {
         const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_disease', {
@@ -115,12 +185,20 @@ const DiseaseDetectionForm = () => {
           "Maintain clean housing conditions.",
           "Ensure proper vaccination schedule is followed.",
           "Watch for early signs of illness."
-        ]
+        ],
+        report_file: "disease_report_mock.pdf"
       };
       setDiseaseResult(mockResult);
       addDiseasePrediction(mockResult);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownloadReport = () => {
+    if (diseaseResult?.report_file) {
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${diseaseResult.report_file}`;
+      window.open(downloadUrl, '_blank');
     }
   };
 
@@ -502,12 +580,30 @@ const DiseaseDetectionForm = () => {
               
               <Button 
                 onClick={handleDetect}
-                disabled={isLoading || !cowData.breed || !cowData.age}
-                className="w-full bg-gradient-primary text-lg py-3"
+                disabled={isLoading || !isFormValid()}
+                className="w-full bg-gradient-primary text-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 size="lg"
               >
                 {isLoading ? "Analyzing..." : "Detect Disease"}
               </Button>
+              
+              {/* Validation Error Display */}
+              {showValidation && validationErrors.length > 0 && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertCircle className="w-5 h-5 text-red-600" />
+                    <h4 className="font-semibold text-red-800">Please fill in all required fields:</h4>
+                  </div>
+                  <ul className="text-sm text-red-700 space-y-1">
+                    {validationErrors.map((error, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="w-1 h-1 bg-red-600 rounded-full"></span>
+                        {error}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -549,6 +645,17 @@ const DiseaseDetectionForm = () => {
                       </li>
                     ))}
                   </ul>
+                </div>
+
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <Button 
+                    onClick={handleDownloadReport}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                    size="lg"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Health Report
+                  </Button>
                 </div>
               </CardContent>
             </Card>

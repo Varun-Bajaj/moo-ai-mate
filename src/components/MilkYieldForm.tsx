@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Calendar, Droplets } from "lucide-react";
+import { TrendingUp, Calendar, Droplets, Download, AlertCircle } from "lucide-react";
 import { usePredictionContext } from "@/contexts/PredictionContext";
 
 interface CowData {
@@ -42,6 +42,7 @@ interface PredictionResult {
   optimization_hint: string;
   explanation: string;
   tips: string[];
+  report_file: string;
 }
 
 const MilkYieldForm = () => {
@@ -76,13 +77,82 @@ const MilkYieldForm = () => {
   
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [showValidation, setShowValidation] = useState(false);
 
   const handleInputChange = (field: keyof CowData, value: string | number) => {
     setCowData(prev => ({ ...prev, [field]: value }));
+    // Clear validation errors when user starts typing
+    if (validationErrors.length > 0) {
+      setValidationErrors([]);
+      setShowValidation(false);
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const errors: string[] = [];
+    
+    // Required string fields
+    const requiredStringFields: (keyof CowData)[] = [
+      'breed', 'lactation_stage', 'reproductive_status', 'feed_type', 
+      'vaccination_status', 'disease_history', 'activity_alert', 'season', 'housing_condition'
+    ];
+    
+    requiredStringFields.forEach(field => {
+      if (!cowData[field] || cowData[field] === '') {
+        errors.push(`${field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} is required`);
+      }
+    });
+    
+    // Required numeric fields
+    const requiredNumericFields: (keyof CowData)[] = [
+      'age', 'weight', 'parity', 'past_yield', 'feed_qty', 'feeding_freq',
+      'walking_distance', 'grazing_hours', 'rumination_time', 'resting_hours',
+      'body_temp', 'heart_rate', 'ambient_temp', 'humidity'
+    ];
+    
+    requiredNumericFields.forEach(field => {
+      if (cowData[field] === 0 || cowData[field] === '') {
+        errors.push(`${field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())} is required`);
+      }
+    });
+    
+    setValidationErrors(errors);
+    return errors.length === 0;
+  };
+
+  const isFormValid = (): boolean => {
+    const requiredStringFields: (keyof CowData)[] = [
+      'breed', 'lactation_stage', 'reproductive_status', 'feed_type', 
+      'vaccination_status', 'disease_history', 'activity_alert', 'season', 'housing_condition'
+    ];
+    
+    const requiredNumericFields: (keyof CowData)[] = [
+      'age', 'weight', 'parity', 'past_yield', 'feed_qty', 'feeding_freq',
+      'walking_distance', 'grazing_hours', 'rumination_time', 'resting_hours',
+      'body_temp', 'heart_rate', 'ambient_temp', 'humidity'
+    ];
+    
+    const stringFieldsValid = requiredStringFields.every(field => 
+      cowData[field] && cowData[field] !== ''
+    );
+    
+    const numericFieldsValid = requiredNumericFields.every(field => 
+      cowData[field] !== 0 && cowData[field] !== ''
+    );
+    
+    return stringFieldsValid && numericFieldsValid;
   };
 
   const handlePredict = async () => {
+    // Validate form before proceeding
+    if (!validateForm()) {
+      setShowValidation(true);
+      return;
+    }
+    
     setIsLoading(true);
+    setShowValidation(false);
     
     try {
         const response = await fetch('https://bcs7cd8f-8000.inc1.devtunnels.ms/predict_yield', {
@@ -118,12 +188,20 @@ const MilkYieldForm = () => {
           "2. Give your cow good food with nutrients.",
           "3. Keep your cow clean and happy.",
           "Remember, happy cow gives more milk!"
-        ]
+        ],
+        report_file: "yield_report_mock.pdf"
       };
       setPrediction(mockPrediction);
       addYieldPrediction(mockPrediction);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownloadReport = () => {
+    if (prediction?.report_file) {
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${prediction.report_file}`;
+      window.open(downloadUrl, '_blank');
     }
   };
 
@@ -505,12 +583,30 @@ const MilkYieldForm = () => {
               
               <Button 
                 onClick={handlePredict}
-                disabled={isLoading || !cowData.breed || !cowData.age}
-                className="w-full bg-gradient-primary text-lg py-3"
+                disabled={isLoading || !isFormValid()}
+                className="w-full bg-gradient-primary text-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 size="lg"
               >
                 {isLoading ? "Analyzing..." : "Predict Milk Yield"}
               </Button>
+              
+              {/* Validation Error Display */}
+              {showValidation && validationErrors.length > 0 && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertCircle className="w-5 h-5 text-red-600" />
+                    <h4 className="font-semibold text-red-800">Please fill in all required fields:</h4>
+                  </div>
+                  <ul className="text-sm text-red-700 space-y-1">
+                    {validationErrors.map((error, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="w-1 h-1 bg-red-600 rounded-full"></span>
+                        {error}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -561,6 +657,17 @@ const MilkYieldForm = () => {
                       </li>
                     ))}
                   </ul>
+                </div>
+
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <Button 
+                    onClick={handleDownloadReport}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                    size="lg"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Detailed Report
+                  </Button>
                 </div>
               </CardContent>
             </Card>

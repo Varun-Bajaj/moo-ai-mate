@@ -19,6 +19,7 @@ interface CowResult {
 
 interface CSVResponse {
   results: CowResult[];
+  report_file: string;
 }
 
 const CSVUploadSection = () => {
@@ -88,12 +89,20 @@ const CSVUploadSection = () => {
             yield_explanation: "Hello Farmer. Your cow gives 8.4 liters of milk every day. Weekly milk: 58.8 liters. If you give 10% more food, milk will increase.",
             disease_explanation: "Your cow looks healthy. Maybe cow is not eating well or water is not clean. Give good food and clean water."
           }
-        ]
+        ],
+        report_file: "csv_analysis_report_mock.pdf"
       };
       setCsvResults(mockResults);
       addCSVPrediction(mockResults);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownloadReport = () => {
+    if (csvResults?.report_file) {
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${csvResults.report_file}`;
+      window.open(downloadUrl, '_blank');
     }
   };
 
@@ -377,6 +386,18 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                 </div>
                 <div className="text-muted-foreground">Healthy Cows</div>
               </div>
+            </div>
+
+            {/* Download Report Button */}
+            <div className="mt-8 text-center">
+              <Button 
+                onClick={handleDownloadReport}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                size="lg"
+              >
+                <Download className="w-5 h-5 mr-2" />
+                Download Complete Analysis Report
+              </Button>
             </div>
           </div>
         )}
