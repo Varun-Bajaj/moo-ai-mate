@@ -200,7 +200,7 @@ const MilkYieldForm = () => {
 
   const handleDownloadReport = () => {
     if (prediction?.report_file) {
-      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${prediction.report_file}`;
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download_report/${prediction.report_file}`;
       window.open(downloadUrl, '_blank');
     }
   };
