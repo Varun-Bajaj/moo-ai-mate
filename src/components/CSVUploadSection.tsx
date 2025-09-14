@@ -101,8 +101,7 @@ const CSVUploadSection = () => {
 
   const handleDownloadReport = () => {
     if (csvResults?.report_file) {
-      const fileName = csvResults?.report_file.replace(/^reports\//, "");
-      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${fileName}`;
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download_report/${csvResults.report_file}`;
       window.open(downloadUrl, '_blank');
     }
   };
