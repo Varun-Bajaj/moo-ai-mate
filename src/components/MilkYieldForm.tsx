@@ -624,27 +624,27 @@ const MilkYieldForm = () => {
               
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-card rounded-lg shadow-soft border">
+                  <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                     <Calendar className="w-8 h-8 text-primary mx-auto mb-2" />
                     <div className="text-2xl font-bold text-foreground">{prediction.predicted_yield}L</div>
                     <div className="text-sm text-muted-foreground">Daily Yield</div>
                   </div>
                   
-                  <div className="text-center p-4 bg-card rounded-lg shadow-soft border">
+                  <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                     <TrendingUp className="w-8 h-8 text-success mx-auto mb-2" />
                     <div className="text-2xl font-bold text-foreground">{prediction.predicted_weekly_yield}L</div>
                     <div className="text-sm text-muted-foreground">Weekly Yield</div>
                   </div>
                 </div>
                 
-                <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">💡 Optimization Hint</h4>
-                  <p className="text-blue-800 dark:text-blue-200 text-sm">{prediction.optimization_hint}</p>
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-900 mb-2">💡 Optimization Hint</h4>
+                  <p className="text-blue-800 text-sm">{prediction.optimization_hint}</p>
                 </div>
                 
-                <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                  <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3">📝 Detailed Explanation</h4>
-                  <div className="text-green-800 dark:text-green-200 text-sm whitespace-pre-line">{prediction.explanation}</div>
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-semibold text-green-900 mb-3">📝 Detailed Explanation</h4>
+                  <div className="text-green-800 text-sm whitespace-pre-line">{prediction.explanation}</div>
                 </div>
                 
                 <div>

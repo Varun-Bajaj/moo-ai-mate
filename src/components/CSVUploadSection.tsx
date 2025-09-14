@@ -316,13 +316,13 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                   <CardContent className="space-y-6">
                     {/* Yield Predictions */}
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-4 bg-card rounded-lg shadow-soft border">
+                      <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                         <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
                         <div className="text-xl font-bold text-foreground">{result.predicted_yield}L</div>
                         <div className="text-sm text-muted-foreground">Daily Yield</div>
                       </div>
                       
-                      <div className="text-center p-4 bg-card rounded-lg shadow-soft border">
+                      <div className="text-center p-4 bg-white rounded-lg shadow-soft">
                         <BarChart3 className="w-6 h-6 text-success mx-auto mb-2" />
                         <div className="text-xl font-bold text-foreground">{result.predicted_weekly_yield}L</div>
                         <div className="text-sm text-muted-foreground">Weekly Yield</div>
@@ -330,32 +330,32 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
                     </div>
 
                     {/* Prevention */}
-                    <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                      <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
                         <Heart className="w-4 h-4" />
                         Health Prevention
                       </h4>
-                      <p className="text-blue-800 dark:text-blue-200 text-sm">{result.prevention}</p>
+                      <p className="text-blue-800 text-sm">{result.prevention}</p>
                     </div>
 
                     {/* Yield Explanation */}
-                    <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                      <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3 flex items-center gap-2">
+                    <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                      <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
                         <TrendingUp className="w-4 h-4" />
                         Yield Analysis
                       </h4>
-                      <div className="text-green-800 dark:text-green-200 text-sm whitespace-pre-line max-h-32 overflow-y-auto">
+                      <div className="text-green-800 text-sm whitespace-pre-line max-h-32 overflow-y-auto">
                         {result.yield_explanation}
                       </div>
                     </div>
 
                     {/* Disease Explanation */}
-                    <div className="bg-orange-50 dark:bg-orange-950/20 p-4 rounded-lg border border-orange-200 dark:border-orange-800">
-                      <h4 className="font-semibold text-orange-900 dark:text-orange-100 mb-3 flex items-center gap-2">
+                    <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                      <h4 className="font-semibold text-orange-900 mb-3 flex items-center gap-2">
                         <AlertTriangle className="w-4 h-4" />
                         Health Analysis
                       </h4>
-                      <div className="text-orange-800 dark:text-orange-200 text-sm whitespace-pre-line max-h-32 overflow-y-auto">
+                      <div className="text-orange-800 text-sm whitespace-pre-line max-h-32 overflow-y-auto">
                         {result.disease_explanation}
                       </div>
                     </div>
@@ -366,21 +366,21 @@ Sahiwal,30,450,Early,1,22,Pregnant,Hay,22,2,1,4,6,14,38.3,70,Up to Date,None,Nor
 
             {/* Summary Stats */}
             <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 bg-card rounded-lg shadow-soft border">
+              <div className="text-center p-6 bg-white rounded-lg shadow-soft">
                 <div className="text-3xl font-bold text-primary mb-2">
                   {csvResults.results.length}
                 </div>
                 <div className="text-muted-foreground">Total Cows Analyzed</div>
               </div>
               
-              <div className="text-center p-6 bg-card rounded-lg shadow-soft border">
+              <div className="text-center p-6 bg-white rounded-lg shadow-soft">
                 <div className="text-3xl font-bold text-success mb-2">
                   {(csvResults.results.reduce((sum, r) => sum + r.predicted_yield, 0) / csvResults.results.length).toFixed(1)}L
                 </div>
                 <div className="text-muted-foreground">Average Daily Yield</div>
               </div>
               
-              <div className="text-center p-6 bg-card rounded-lg shadow-soft border">
+              <div className="text-center p-6 bg-white rounded-lg shadow-soft">
                 <div className="text-3xl font-bold text-warning mb-2">
                   {csvResults.results.filter(r => r.disease_prediction === 'Healthy').length}
                 </div>

@@ -589,10 +589,10 @@ const DiseaseDetectionForm = () => {
               
               {/* Validation Error Display */}
               {showValidation && validationErrors.length > 0 && (
-                <div className="mt-4 p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                   <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
-                    <h4 className="font-semibold text-red-800 dark:text-red-200">Please fill in all required fields:</h4>
+                    <AlertCircle className="w-5 h-5 text-red-600" />
+                    <h4 className="font-semibold text-red-800">Please fill in all required fields:</h4>
                   </div>
                   <ul className="text-sm text-red-700 space-y-1">
                     {validationErrors.map((error, index) => (
@@ -625,14 +625,14 @@ const DiseaseDetectionForm = () => {
                   <p className="text-orange-800 text-sm">{diseaseResult.disease_prediction}</p>
                 </div>
                 
-                <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">🛡️ Prevention Measures</h4>
-                  <p className="text-blue-800 dark:text-blue-200 text-sm">{diseaseResult.prevention}</p>
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-900 mb-2">🛡️ Prevention Measures</h4>
+                  <p className="text-blue-800 text-sm">{diseaseResult.prevention}</p>
                 </div>
                 
-                <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                  <h4 className="font-semibold text-green-900 dark:text-green-100 mb-3">📝 Detailed Analysis</h4>
-                  <div className="text-green-800 dark:text-green-200 text-sm whitespace-pre-line">{diseaseResult.explanation}</div>
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-semibold text-green-900 mb-3">📝 Detailed Analysis</h4>
+                  <div className="text-green-800 text-sm whitespace-pre-line">{diseaseResult.explanation}</div>
                 </div>
                 
                 <div>
