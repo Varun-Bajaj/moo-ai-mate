@@ -198,37 +198,10 @@ const MilkYieldForm = () => {
     }
   };
 
-  const handleDownloadReport = async () => {
+  const handleDownloadReport = () => {
     if (prediction?.report_file) {
-      try {
-        const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download_report/${prediction.report_file}`;
-        
-        // Fetch the PDF file
-        const response = await fetch(downloadUrl);
-        if (!response.ok) {
-          throw new Error('Failed to download report');
-        }
-        
-        // Create blob from response
-        const blob = await response.blob();
-        
-        // Create download link
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = prediction.report_file;
-        document.body.appendChild(a);
-        a.click();
-        
-        // Cleanup
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error('Error downloading report:', error);
-        // Fallback to opening in new tab
-        const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${prediction.report_file}`;
-        window.open(downloadUrl, '_blank');
-      }
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${prediction.report_file}`;
+      window.open(downloadUrl, '_blank');
     }
   };
 

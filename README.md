@@ -125,7 +125,7 @@ The application will be available at `http://localhost:5173`
 1. Complete any prediction (Milk Yield, Disease Detection, or CSV Analysis)
 2. View detailed results on the website
 3. Click the "Download Report" button in the results section
-4. PDF report automatically downloads to your device
+4. PDF report opens in a new tab for download
 5. Save reports for future reference or veterinary consultation
 
 ## 🔧 API Endpoints
