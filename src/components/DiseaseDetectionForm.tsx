@@ -197,7 +197,8 @@ const DiseaseDetectionForm = () => {
 
   const handleDownloadReport = () => {
     if (diseaseResult?.report_file) {
-      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download_report/${diseaseResult.report_file}`;
+      const fileName = diseaseResult?.report_file.replace(/^reports\//, "");
+      const downloadUrl = `https://bcs7cd8f-8000.inc1.devtunnels.ms/download/${fileName}`;
       window.open(downloadUrl, '_blank');
     }
   };
